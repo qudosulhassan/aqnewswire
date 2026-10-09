@@ -105,7 +105,7 @@ class DashboardController extends Controller
         $pipeline = [
             'drafts' => Article::where('status', 'draft')->count(),
             'submitted' => Article::where('status', 'submitted')->count(),
-            'review' => EditorialNote::where('status', 'open')->count(),
+            'review' => EditorialNote::where('is_resolved', false)->count(),
             'scheduled' => Article::whereNotNull('scheduled_at')->count(),
             'published_recent' => Article::where('status', 'published')->count(),
         ];
