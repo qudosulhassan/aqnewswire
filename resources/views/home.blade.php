@@ -26,7 +26,7 @@
                     </div>
 
                     <!-- Massive Confident Headline with Dynamic Story Title -->
-                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0A2540] tracking-tight leading-[1.12] font-sans">
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0A2540] tracking-tight leading-[1.12] font-serif">
                         <a href="{{ $heroStory ? route('articles.show', $heroStory->slug) : route('search.index') }}" class="hover:text-[#635BFF] transition">
                             {{ $heroStory?->title ?? 'The New Rules of Global Business' }}
                         </a>

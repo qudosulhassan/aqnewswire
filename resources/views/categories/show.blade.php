@@ -115,7 +115,7 @@
                 </div>
 
                 <!-- Primary Editorial H1: Guaranteed High Contrast Deep Navy (#0A2540) -->
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-[#0A2540] font-sans tracking-tight leading-[1.05]">
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-[#0A2540] font-serif tracking-tight leading-[1.05]">
                     {{ $category->name }}
                 </h1>
 

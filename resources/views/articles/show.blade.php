@@ -173,7 +173,7 @@ class="bg-white text-slate-800 min-h-screen relative">
 
         <!-- High-Legibility Editorial Dek / Subtitle -->
         @if($article->subtitle)
-            <p class="font-sans text-slate-600 text-lg sm:text-xl lg:text-2xl font-light leading-relaxed mb-6 max-w-4xl">
+            <p class="font-serif text-slate-600 text-lg sm:text-xl lg:text-2xl font-light leading-relaxed mb-6 max-w-4xl">
                 {{ $article->subtitle }}
             </p>
         @endif

@@ -43,13 +43,38 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        .font-headline { font-family: 'Newsreader', Georgia, serif; }
-        .font-brand { font-family: 'Cinzel', serif; letter-spacing: 0.18em; }
-        .font-sans { font-family: 'Inter', system-ui, sans-serif; }
+        :root {
+            --font-serif: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+            --font-headline: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+            --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+        }
+        .font-serif {
+            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif !important;
+        }
+        .font-headline {
+            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+        }
+        .font-brand {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.18em;
+        }
+        .font-sans,
+        header#main-header,
+        nav,
+        .market-ticker,
+        button,
+        input,
+        select,
+        textarea {
+            font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
     </style>
     @stack('head')
 </head>
-<body class="bg-white text-slate-800 antialiased selection:bg-[#635BFF] selection:text-white">
+<body class="bg-white text-slate-800 antialiased font-serif selection:bg-[#635BFF] selection:text-white">
 
     <!-- 1. Top Market Ticker Bar (Global Financial Pulse - Stripe Clean Style) -->
     <div class="bg-[#F8FAFC] border-b border-slate-200/80 text-[11px] text-slate-500 py-1.5 px-4 overflow-hidden hidden sm:block">
