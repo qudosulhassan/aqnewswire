@@ -21,16 +21,15 @@
                     <!-- Stripe-Style Pill Badge -->
                     <div class="inline-flex items-center gap-2">
                         <span class="bg-[#635BFF]/10 text-[#635BFF] font-bold text-[11px] uppercase tracking-wider px-3.5 py-1 rounded-full border border-[#635BFF]/20 shadow-xs">
-                            THE BIG STORY
+                            {{ $heroStory?->category?->name ?? 'THE BIG STORY' }}
                         </span>
                     </div>
 
-                    <!-- Massive Confident Headline with Electric Gradient -->
-                    <h1 class="text-4xl sm:text-6xl xl:text-7xl font-black text-[#0A2540] tracking-tight leading-[1.08] font-sans">
-                        The New Rules of 
-                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#635BFF] via-indigo-600 to-cyan-600">
-                            Global Business
-                        </span>
+                    <!-- Massive Confident Headline with Dynamic Story Title -->
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-[#0A2540] tracking-tight leading-[1.12] font-sans">
+                        <a href="{{ $heroStory ? route('articles.show', $heroStory->slug) : route('search.index') }}" class="hover:text-[#635BFF] transition">
+                            {{ $heroStory?->title ?? 'The New Rules of Global Business' }}
+                        </a>
                     </h1>
 
                     <!-- 2-3 Line Summary -->
@@ -102,13 +101,13 @@
                 <div class="lg:col-span-5 relative">
                     <div class="relative rounded-2xl overflow-hidden border border-slate-200/80 shadow-xl bg-slate-100 group">
                         <!-- Featured Cinematic Image -->
-                        <div class="aspect-[16/11] overflow-hidden relative">
+                        <a href="{{ $heroStory ? route('articles.show', $heroStory->slug) : route('search.index') }}" class="aspect-[16/11] overflow-hidden relative block">
                             <img src="{{ $heroStory?->image_url ?? 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80' }}" 
-                                 alt="Global Business Graphic" 
+                                 alt="{{ $heroStory?->title ?? 'Featured Story' }}" 
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-700 ease-out">
                             <!-- Overlay Sheen -->
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                        </div>
+                        </a>
 
                         <!-- Top-Right Floating Bookmark Icon -->
                         @if($heroStory)
