@@ -33,7 +33,7 @@
 
             <div>
                 <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">Editorial Email</label>
-                <input type="email" name="email" value="{{ old('email', 'admin@aqnewswire.com') }}" required 
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="name@aqnewswire.com" required 
                        class="w-full px-3 py-2.5 border border-stone-300 rounded text-sm focus:outline-none focus:border-stone-900 transition">
             </div>
 
@@ -41,7 +41,7 @@
                 <div class="flex items-center justify-between mb-1">
                     <label class="text-xs font-bold uppercase tracking-wider text-stone-700">Password</label>
                 </div>
-                <input type="password" name="password" value="password123" required 
+                <input type="password" name="password" value="" placeholder="••••••••" required 
                        class="w-full px-3 py-2.5 border border-stone-300 rounded text-sm focus:outline-none focus:border-stone-900 transition">
             </div>
 
@@ -50,15 +50,9 @@
                 <label for="remember" class="ml-2 text-xs text-stone-600">Remember credentials on this workstation</label>
             </div>
 
-            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-widest py-3 rounded transition">
+            <button type="submit" class="w-full bg-[#635BFF] hover:bg-[#5851EA] text-white font-bold text-xs uppercase tracking-widest py-3 rounded-lg shadow-sm transition">
                 Sign In To CMS
             </button>
-
-            <div class="bg-stone-50 border border-stone-200 p-3 rounded text-[11px] text-stone-600">
-                <p class="font-bold text-stone-800 mb-1">Default Pre-Configured Credentials:</p>
-                <p>Email: <span class="font-mono font-semibold text-stone-900">admin@aqnewswire.com</span></p>
-                <p>Password: <span class="font-mono font-semibold text-stone-900">password123</span></p>
-            </div>
 
             <div class="text-center pt-2">
                 <a href="{{ route('home') }}" class="text-xs text-stone-500 hover:text-stone-900 transition">
