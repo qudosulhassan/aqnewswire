@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\AuditLog;
 use App\Models\Category;
 use App\Models\SeoRedirect;
+use App\Models\Setting;
 use App\Services\SeoAuditService;
 use App\Services\SeoRedirectService;
 use App\Services\SitemapService;
@@ -68,6 +69,9 @@ class AdminSeoController extends Controller
             ->take(6)
             ->get();
 
+        $gscCode = Setting::get('google_search_console_code');
+        $customHeadScripts = Setting::get('custom_head_scripts');
+
         return view('admin.seo.index', compact(
             'totalArticles',
             'indexableStories',
@@ -78,7 +82,9 @@ class AdminSeoController extends Controller
             'active301',
             'active302',
             'auditReport',
-            'flaggedArticles'
+            'flaggedArticles',
+            'gscCode',
+            'customHeadScripts'
         ));
     }
 
@@ -533,5 +539,34 @@ class AdminSeoController extends Controller
         $redirect->delete();
 
         return back()->with('success', 'URL redirect removed successfully.');
+    }
+
+    /**
+     * Store or update Google Search Console verification code and custom head code.
+     */
+    public function updateSearchConsole(Request $request)
+    {
+        $validated = $request->validate([
+            'google_search_console_code' => 'nullable|string|max:1000',
+            'custom_head_scripts' => 'nullable|string|max:20000',
+        ]);
+
+        $gscCode = trim($validated['google_search_console_code'] ?? '');
+        // If user pasted a full <meta ...> tag, extract the content attribute
+        if (!empty($gscCode) && preg_match('/content=["\']([^"\']+)["\']/i', $gscCode, $matches)) {
+            $gscCode = $matches[1];
+        }
+
+        Setting::set('google_search_console_code', $gscCode ?: null, 'text', 'seo');
+        Setting::set('custom_head_scripts', $validated['custom_head_scripts'] ?? null, 'text', 'seo');
+
+        AuditLog::record(
+            'seo_search_console_updated',
+            'Setting',
+            null,
+            'Updated Google Search Console verification code' . ($gscCode ? " ($gscCode)" : ' (cleared)')
+        );
+
+        return redirect()->route('admin.seo.index')->with('success', 'Google Search Console verification code and header tags saved successfully! The verification meta tag is now live in the <head> of all public pages.');
     }
 }

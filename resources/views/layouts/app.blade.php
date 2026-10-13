@@ -9,6 +9,20 @@
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="robots" content="@yield('robots', 'index, follow, max-image-preview:large')">
 
+    <!-- Google Search Console Ownership Verification -->
+    @if($gsc = \App\Models\Setting::get('google_search_console_code'))
+        @if(str_contains($gsc, '<meta'))
+            {!! $gsc !!}
+        @else
+            <meta name="google-site-verification" content="{{ $gsc }}">
+        @endif
+    @endif
+
+    <!-- Custom Header Scripts & Analytics Injection -->
+    @if($customHead = \App\Models\Setting::get('custom_head_scripts'))
+        {!! $customHead !!}
+    @endif
+
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE') }}">
@@ -1051,6 +1065,11 @@
             }
         });
     </script>
+
+    <!-- Custom Body Scripts Injection -->
+    @if($customBody = \App\Models\Setting::get('custom_body_scripts'))
+        {!! $customBody !!}
+    @endif
 
     @stack('scripts')
 </body>

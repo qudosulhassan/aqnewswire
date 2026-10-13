@@ -149,6 +149,7 @@
             <a href="#sec-reader" class="nav-tab px-3 py-1.5 rounded-xl hover:text-white hover:bg-slate-800/80 transition">6. Reader Features</a>
             <a href="#sec-editorial" class="nav-tab px-3 py-1.5 rounded-xl hover:text-white hover:bg-slate-800/80 transition">7. Editorial</a>
             <a href="#sec-system" class="nav-tab px-3 py-1.5 rounded-xl hover:text-white hover:bg-slate-800/80 transition">8. System Diagnostics</a>
+            <a href="#sec-seo" class="nav-tab px-3 py-1.5 rounded-xl hover:text-white hover:bg-slate-800/80 transition">9. Search Console &amp; Header</a>
         </nav>
     </div>
 
@@ -867,6 +868,62 @@
                 <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80">
                     <span class="text-slate-500 block text-[10px] uppercase font-bold">Queue / Session</span>
                     <span class="font-semibold text-slate-200">{{ $systemDiagnostics['queue_driver'] }} / {{ $systemDiagnostics['session_driver'] }}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9: SEARCH CONSOLE & CUSTOM SCRIPTS -->
+        <section id="sec-seo" class="settings-card bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-2">
+                <div>
+                    <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+                        <span>9. Google Search Console &amp; Header Code</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30">SEO</span>
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Configure Google Search Console verification meta tags and custom tracking or analytics code.</p>
+                </div>
+                <span class="status-pill text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                    Saved
+                </span>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Google Search Console Code -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center justify-between">
+                        <span>Google Search Console Verification Code / Meta Tag</span>
+                        <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="text-blue-400 hover:text-white text-[10px] font-semibold flex items-center gap-1">Open Google Search Console ↗</a>
+                    </label>
+                    <input type="text" 
+                           name="google_search_console_code" 
+                           value="{{ old('google_search_console_code', $settings['seo']['google_search_console_code']['value'] ?? '') }}"
+                           placeholder='e.g. dB9fLq... or <meta name="google-site-verification" content="..." />'
+                           class="w-full px-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition">
+                    <p class="text-[11px] text-slate-400">Paste either the verification string or the entire <code>&lt;meta name="google-site-verification" content="..."&gt;</code> tag. It will be injected directly into the <code>&lt;head&gt;</code> of all public pages.</p>
+                </div>
+
+                <!-- Custom Header Scripts -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        Custom Header Scripts &amp; Tags (&lt;head&gt;)
+                    </label>
+                    <textarea name="custom_head_scripts" 
+                              rows="4" 
+                              placeholder="<!-- Google Analytics GA4, Google Tag Manager, or Meta Pixel -->&#10;<script async src='https://www.googletagmanager.com/gtag/js?id=G-...'></script>"
+                              class="w-full px-4 py-2 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition">{{ old('custom_head_scripts', $settings['seo']['custom_head_scripts']['value'] ?? '') }}</textarea>
+                    <p class="text-[11px] text-slate-400">Raw HTML or JavaScript tags rendered inside the <code>&lt;head&gt;</code> of all public views.</p>
+                </div>
+
+                <!-- Custom Body Scripts -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                        Custom Body Scripts (&lt;/body&gt;)
+                    </label>
+                    <textarea name="custom_body_scripts" 
+                              rows="3" 
+                              placeholder="<!-- GTM Noscript iframe or bottom tracking pixels -->&#10;<noscript><iframe src='https://www.googletagmanager.com/ns.html?id=GTM-...' height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript>"
+                              class="w-full px-4 py-2 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition">{{ old('custom_body_scripts', $settings['seo']['custom_body_scripts']['value'] ?? '') }}</textarea>
+                    <p class="text-[11px] text-slate-400">Raw HTML or JavaScript tags rendered just before the closing <code>&lt;/body&gt;</code> tag.</p>
                 </div>
             </div>
         </section>

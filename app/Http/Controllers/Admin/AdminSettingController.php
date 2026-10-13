@@ -53,6 +53,10 @@ class AdminSettingController extends Controller
         'default_reading_words_per_minute' => ['integer', 'editorial'],
         'default_article_status' => ['string', 'editorial'],
         'enable_reading_history' => ['boolean', 'editorial'],
+
+        'google_search_console_code' => ['text', 'seo'],
+        'custom_head_scripts' => ['text', 'seo'],
+        'custom_body_scripts' => ['text', 'seo'],
     ];
 
     public const DEFAULT_VALUES = [
@@ -213,7 +217,20 @@ class AdminSettingController extends Controller
             'default_reading_words_per_minute' => 'required|integer|min:50|max:500',
             'default_article_status' => 'required|in:draft,published',
             'enable_reading_history' => 'nullable|boolean',
+
+            // SEO & Head Scripts
+            'google_search_console_code' => 'nullable|string|max:1000',
+            'custom_head_scripts' => 'nullable|string|max:20000',
+            'custom_body_scripts' => 'nullable|string|max:20000',
         ]);
+
+        // Auto-extract content attribute if user pasted full <meta> tag
+        if (!empty($validated['google_search_console_code'])) {
+            $gscRaw = trim($validated['google_search_console_code']);
+            if (preg_match('/content=["\']([^"\']+)["\']/i', $gscRaw, $matches)) {
+                $validated['google_search_console_code'] = $matches[1];
+            }
+        }
 
         $changedKeys = [];
         foreach (self::SETTINGS_DEFINITIONS as $key => [$type, $group]) {

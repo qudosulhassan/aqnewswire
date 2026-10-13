@@ -195,6 +195,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // SEO Architecture & Health (Restricted to Administrators)
         Route::middleware('admin.role')->group(function () {
             Route::get('/seo', [AdminSeoController::class, 'index'])->name('seo.index');
+            Route::post('/seo/search-console', [AdminSeoController::class, 'updateSearchConsole'])->name('seo.search-console.update');
             Route::post('/seo/audit', [AdminSeoController::class, 'runAuditAction'])->name('seo.audit');
             Route::get('/seo/sitemap/validate', [AdminSeoController::class, 'validateSitemapAction'])->name('seo.sitemap.validate');
             Route::get('/seo/sitemap/download', [AdminSeoController::class, 'downloadSitemapAction'])->name('seo.sitemap.download');

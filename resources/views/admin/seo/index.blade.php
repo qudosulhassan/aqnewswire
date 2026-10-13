@@ -462,22 +462,61 @@
             </div>
 
             <!-- Google Search Console Connection Card -->
-            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 font-bold text-xs">
-                        GSC
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-slate-900">Google Search Console</span>
-                            <span class="text-[10px] font-bold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">NOT CONNECTED</span>
+            <div class="p-4 rounded-xl border {{ !empty($gscCode) ? 'border-emerald-200 bg-emerald-50/40' : 'border-slate-200 bg-slate-50/70' }} space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl {{ !empty($gscCode) ? 'bg-emerald-600 text-white' : 'bg-blue-600 text-white' }} flex items-center justify-center shrink-0 font-black text-xs shadow-xs">
+                            GSC
                         </div>
-                        <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">CMS verifies internal technical readiness. Live indexing reports require Search Console ownership.</p>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold text-slate-900">Google Search Console</span>
+                                @if(!empty($gscCode))
+                                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>CONNECTED & VERIFIED IN &lt;HEAD&gt;</span>
+                                    </span>
+                                @else
+                                    <span class="text-[10px] font-bold text-slate-500 bg-slate-200 px-1.5 py-0.5 rounded">NOT CONNECTED</span>
+                                @endif
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                                @if(!empty($gscCode))
+                                    Verification meta tag is live in site header. Open Search Console to verify ownership and inspect live indexing.
+                                @else
+                                    Add your Search Console verification HTML tag or token to connect ownership.
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" 
+                                onclick="openGscModal()" 
+                                class="px-3 py-1.5 text-xs font-bold rounded-lg transition shadow-xs flex items-center gap-1.5 {{ !empty($gscCode) ? 'text-slate-700 bg-white border border-slate-200 hover:bg-slate-50' : 'text-white bg-blue-600 hover:bg-blue-700' }}">
+                            @if(!empty($gscCode))
+                                <span>Edit Code</span>
+                            @else
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                <span>Add Console Code</span>
+                            @endif
+                        </button>
+                        <a href="https://search.google.com/search-console" 
+                           target="_blank" 
+                           rel="noopener" 
+                           class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition shadow-2xs flex items-center gap-1">
+                            <span>Open GSC</span>
+                            <span>&rarr;</span>
+                        </a>
                     </div>
                 </div>
-                <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="px-3 py-1.5 text-xs font-semibold text-slate-800 bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition shrink-0 shadow-2xs">
-                    Open GSC &rarr;
-                </a>
+
+                @if(!empty($gscCode))
+                    <div class="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px] text-slate-600 bg-white/80 p-2.5 rounded-lg border border-emerald-100 font-mono">
+                        <span class="truncate">&lt;meta name="google-site-verification" content="{{ Str::limit($gscCode, 48) }}"&gt;</span>
+                        <span class="text-[10px] font-sans font-bold text-emerald-700 uppercase shrink-0 ml-2">Active in &lt;head&gt;</span>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -692,7 +731,90 @@
     </div>
 </div>
 
+<!-- Interactive Modal 3: Google Search Console & Custom Header Code Integration -->
+<div id="gscConnectModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-sm shadow-xs">
+                    GSC
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900">Google Search Console & Header Code</h3>
+                    <p class="text-xs text-slate-500">Inject your verification meta tag and tracking scripts into the &lt;head&gt; of all pages.</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeModal('gscConnectModal')" class="text-slate-400 hover:text-slate-800 text-xl font-bold leading-none">&times;</button>
+        </div>
+
+        <!-- Step-by-Step Guidance Box -->
+        <div class="bg-blue-50/60 border border-blue-200/80 rounded-xl p-4 text-xs text-blue-900 space-y-2">
+            <div class="font-bold flex items-center gap-2 text-blue-950">
+                <span>📋</span>
+                <span>How to Verify Ownership in Google Search Console:</span>
+            </div>
+            <ol class="list-decimal list-inside space-y-1 text-[11px] text-blue-800 leading-relaxed">
+                <li>Go to <a href="https://search.google.com/search-console" target="_blank" rel="noopener" class="underline font-bold hover:text-blue-950">Google Search Console</a> and add property <strong>https://aqnewswire.com</strong> (or your domain).</li>
+                <li>Under <strong>Other verification methods</strong>, select <strong>HTML tag</strong>.</li>
+                <li>Copy either the <strong>entire tag</strong> (e.g. <code>&lt;meta name="google-site-verification" content="..." /&gt;</code>) or just the <strong>code inside quotes</strong>.</li>
+                <li>Paste it below and click <strong>Save &amp; Inject into Header</strong>.</li>
+                <li>Return to Google Search Console and click <strong>Verify</strong>!</li>
+            </ol>
+        </div>
+
+        <form action="{{ route('admin.seo.search-console.update') }}" method="POST" class="space-y-4">
+            @csrf
+
+            <!-- GSC Code Input -->
+            <div class="space-y-1.5">
+                <label for="modal_gsc_code" class="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                    <span>Google Site Verification Code / Meta Tag</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Auto-formats to &lt;head&gt;</span>
+                </label>
+                <textarea name="google_search_console_code" 
+                          id="modal_gsc_code" 
+                          rows="2" 
+                          placeholder='e.g. 4fZ-EXAMPLE-TOKEN or <meta name="google-site-verification" content="..." />' 
+                          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition">{{ old('google_search_console_code', $gscCode ?? '') }}</textarea>
+                <p class="text-[11px] text-slate-500">You can paste the entire <code>&lt;meta&gt;</code> tag or just the verification string.</p>
+            </div>
+
+            <!-- Custom Header Scripts (Optional) -->
+            <div class="space-y-1.5">
+                <label for="modal_head_scripts" class="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                    <span>Custom Header Scripts &amp; Tags (Optional)</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Raw &lt;head&gt; injection</span>
+                </label>
+                <textarea name="custom_head_scripts" 
+                          id="modal_head_scripts" 
+                          rows="4" 
+                          placeholder="<!-- Google Analytics GA4, Google Tag Manager, or Custom CSS/JS -->&#10;<script async src='https://www.googletagmanager.com/gtag/js?id=G-...'></script>" 
+                          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition">{{ old('custom_head_scripts', $customHeadScripts ?? '') }}</textarea>
+                <p class="text-[11px] text-slate-500">Additional scripts or verification tags injected right before <code>&lt;/head&gt;</code>.</p>
+            </div>
+
+            <!-- Actions Toolbar -->
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+                <button type="button" 
+                        onclick="closeModal('gscConnectModal')" 
+                        class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    Cancel
+                </button>
+                <button type="submit" 
+                        class="px-5 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>Save &amp; Inject into Header</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+function openGscModal() {
+    document.getElementById('gscConnectModal').classList.remove('hidden');
+}
+
 function copyFeedUrl(url, btn) {
     navigator.clipboard.writeText(url).then(function() {
         const original = btn.innerText;
