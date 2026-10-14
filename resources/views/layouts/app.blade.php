@@ -223,15 +223,25 @@
 
     <!-- 2. Sticky Modern Navigation Header (Stripe Glassmorphism White) -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200/80 transition-all duration-300 shadow-xs" id="main-header">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
+        <div class="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16 lg:h-20">
                 
-                <!-- Left: AQ NEWSWIRE Logo (Shifted right for clean breathing room away from border) -->
-                <div class="flex items-center shrink-0 pl-3 sm:pl-6 lg:pl-10 xl:pl-12 mr-4 lg:mr-8">
+                <!-- Left: Hamburger (mobile) + AQ NEWSWIRE Logo -->
+                <div class="flex items-center gap-1.5 sm:gap-4 shrink-0">
+                    <!-- Mobile Menu Hamburger Button (44px touch target) -->
+                    <button type="button" 
+                            id="mobile-menu-toggle" 
+                            aria-label="Open Navigation Menu" 
+                            class="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 hover:text-[#0A2540] hover:bg-slate-100 transition cursor-pointer -ml-1">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
+                        </svg>
+                    </button>
+
                     <a href="{{ route('home') }}" class="flex items-center group py-1" title="{{ \App\Models\Setting::get('site_name', 'AQ NEWSWIRE') }}">
                         <img src="{{ \App\Models\Setting::get('logo_url') ?: asset('images/logo.png') }}" 
                              alt="{{ \App\Models\Setting::get('site_name', 'AQ NEWSWIRE') }}" 
-                             class="h-11 sm:h-13 lg:h-14 w-auto max-w-[240px] sm:max-w-[290px] object-contain transition-transform duration-200 group-hover:scale-[1.02]">
+                             class="h-8 sm:h-11 lg:h-14 w-auto max-w-[145px] sm:max-w-[210px] lg:max-w-[280px] object-contain transition-transform duration-200 group-hover:scale-[1.02]">
                         <span class="sr-only">{{ \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE') }}</span>
                     </a>
                 </div>
@@ -642,13 +652,14 @@
                 </nav>
 
                 <!-- Right: Search, Auth, and Subscribe CTA Split Button (Stripe Style) -->
-                <div class="flex items-center gap-3 sm:gap-4 shrink-0">
+                <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                     <!-- Global Search Button (Ctrl+K trigger) -->
                     <button type="button" 
                             id="search-modal-trigger"
-                            class="px-2.5 py-1.5 rounded-xl text-slate-600 hover:text-[#0A2540] bg-slate-100 hover:bg-slate-200/70 border border-slate-200/80 transition flex items-center gap-2 text-xs font-medium cursor-pointer"
+                            aria-label="Search AQ NEWSWIRE"
+                            class="w-10 h-10 sm:w-auto sm:px-3 sm:py-1.5 rounded-xl text-slate-600 hover:text-[#0A2540] bg-slate-100 hover:bg-slate-200/70 border border-slate-200/80 transition flex items-center justify-center gap-2 text-xs font-medium cursor-pointer"
                             title="Search AQ NEWSWIRE (Ctrl + K)">
-                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
                         <span class="hidden sm:inline text-slate-500 text-[11px] font-medium">Ctrl K</span>
@@ -679,83 +690,153 @@
                         <a href="{{ route('login') }}" class="text-xs font-semibold text-slate-700 hover:text-[#0A2540] transition hidden sm:inline">
                             Sign In
                         </a>
-                        <a href="#newsletter-cta" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#635BFF] hover:bg-[#5851EA] text-white text-xs font-bold rounded-xl transition shadow-sm hover:shadow-[#635BFF]/30">
+                        <a href="#newsletter-cta" class="inline-flex items-center gap-1 px-3 sm:px-4 py-2 bg-[#635BFF] hover:bg-[#5851EA] text-white text-xs font-bold rounded-xl transition shadow-sm hover:shadow-[#635BFF]/30">
                             <span>Subscribe</span>
-                            <span class="text-white/80">&rarr;</span>
+                            <span class="text-white/80 hidden sm:inline">&rarr;</span>
                         </a>
                     @endauth
-
-                    <!-- Mobile Menu Hamburger Button (Google Mobile Friendly Touch Target >= 44px) -->
-                    <button type="button" id="mobile-menu-toggle" aria-label="Open Navigation Menu" class="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 hover:text-[#0A2540] hover:bg-slate-100 transition cursor-pointer">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
-                        </svg>
-                    </button>
                 </div>
 
-            </div>
-
-            <!-- Mobile Navigation Drawer -->
-            <div id="mobile-nav" class="hidden lg:hidden pb-6 pt-3 border-t border-slate-200 max-h-[75vh] overflow-y-auto bg-white">
-                <div class="grid grid-cols-2 gap-2.5 text-xs font-semibold text-slate-700">
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'business') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">Business</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'economy') }}" class="hover:text-[#635BFF]">Economy</a>
-                            <a href="{{ route('categories.show', 'finance') }}" class="hover:text-[#635BFF]">Finance</a>
-                            <a href="{{ route('categories.show', 'real-estate') }}" class="hover:text-[#635BFF]">Real Estate</a>
-                            <a href="{{ route('categories.show', 'energy') }}" class="hover:text-[#635BFF]">Energy</a>
-                        </div>
-                    </div>
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'markets') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">Markets</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'us-markets') }}" class="hover:text-[#635BFF]">U.S. Markets</a>
-                            <a href="{{ route('categories.show', 'europe-markets') }}" class="hover:text-[#635BFF]">Europe Markets</a>
-                            <a href="{{ route('categories.show', 'cryptocurrency') }}" class="hover:text-[#635BFF]">Cryptocurrency</a>
-                            <a href="{{ route('categories.show', 'bonds') }}" class="hover:text-[#635BFF]">Bonds</a>
-                        </div>
-                    </div>
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'investing') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">Investing</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'personal-finance') }}" class="hover:text-[#635BFF]">Personal Finance</a>
-                            <a href="{{ route('categories.show', 'fintech') }}" class="hover:text-[#635BFF]">Fintech</a>
-                            <a href="{{ route('categories.show', 'etf-street') }}" class="hover:text-[#635BFF]">ETF Street</a>
-                        </div>
-                    </div>
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'tech') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">Tech</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'ai') }}" class="hover:text-[#635BFF]">AI</a>
-                            <a href="{{ route('categories.show', 'enterprise') }}" class="hover:text-[#635BFF]">Enterprise</a>
-                            <a href="{{ route('categories.show', 'cybersecurity') }}" class="hover:text-[#635BFF]">Cybersecurity</a>
-                        </div>
-                    </div>
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'politics') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">Politics</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'white-house') }}" class="hover:text-[#635BFF]">White House</a>
-                            <a href="{{ route('categories.show', 'defense') }}" class="hover:text-[#635BFF]">Defense</a>
-                            <a href="{{ route('categories.show', 'congress') }}" class="hover:text-[#635BFF]">Congress</a>
-                        </div>
-                    </div>
-                    <div class="space-y-1 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-                        <a href="{{ route('categories.show', 'lifestyle') }}" class="text-[#0A2540] font-bold block pb-1 border-b border-slate-200">LifeStyle</a>
-                        <div class="pt-1 flex flex-col gap-1 text-[11px] text-slate-500">
-                            <a href="{{ route('categories.show', 'careers') }}" class="hover:text-[#635BFF]">Careers</a>
-                            <a href="{{ route('categories.show', 'travel') }}" class="hover:text-[#635BFF]">Travel</a>
-                            <a href="{{ route('categories.show', 'workplace') }}" class="hover:text-[#635BFF]">Workplace</a>
-                        </div>
-                    </div>
-                    <div class="col-span-2 flex items-center justify-between pt-2 px-1">
-                        <a href="{{ route('categories.show', 'health') }}" class="p-2 hover:bg-slate-50 rounded-lg text-emerald-600 font-bold">Health Channel &rarr;</a>
-                        <a href="{{ route('rankings.index') }}" class="p-2 text-[#635BFF] hover:bg-slate-50 rounded-lg font-bold">★ Rankings & Lists</a>
-                    </div>
-                </div>
             </div>
         </div>
+
+        <!-- 3. Mobile Category Navigation Ribbon (Always Visible & Horizontally Scrollable on Mobile/Tablet) -->
+        <nav class="lg:hidden border-t border-slate-200/80 bg-white/95 px-3 py-2 overflow-x-auto no-scrollbar scroll-smooth flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap shadow-xs" aria-label="Mobile Category Bar">
+            <a href="{{ route('home') }}" class="px-3 py-1 rounded-full transition {{ request()->routeIs('home') ? 'bg-[#0A2540] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Latest
+            </a>
+            <a href="{{ route('categories.show', 'business') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*business*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Business
+            </a>
+            <a href="{{ route('categories.show', 'markets') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*markets*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Markets
+            </a>
+            <a href="{{ route('categories.show', 'investing') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*investing*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Investing
+            </a>
+            <a href="{{ route('categories.show', 'tech') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*tech*') || request()->is('*ai*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Tech
+            </a>
+            <a href="{{ route('categories.show', 'politics') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*politics*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Politics
+            </a>
+            <a href="{{ route('categories.show', 'lifestyle') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*lifestyle*') || request()->is('*workplace*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                LifeStyle
+            </a>
+            <a href="{{ route('categories.show', 'health') }}" class="px-3 py-1 rounded-full transition {{ request()->is('*health*') ? 'bg-[#635BFF] text-white font-bold shadow-xs' : 'text-slate-600 hover:text-[#0A2540] hover:bg-slate-100' }}">
+                Health
+            </a>
+            <a href="{{ route('rankings.index') }}" class="px-3 py-1 rounded-full text-[#635BFF] font-bold bg-[#635BFF]/10 hover:bg-[#635BFF]/20 flex items-center gap-1">
+                <span>★</span> Rankings
+            </a>
+            <a href="{{ route('videos.index') }}" class="px-3 py-1 rounded-full text-slate-600 hover:text-[#0A2540] hover:bg-slate-100">
+                Video
+            </a>
+            <a href="{{ route('podcasts.index') }}" class="px-3 py-1 rounded-full text-slate-600 hover:text-[#0A2540] hover:bg-slate-100">
+                Podcasts
+            </a>
+        </nav>
     </header>
+
+    <!-- Mobile Off-Canvas Navigation Drawer (Full Backdrop & Smooth Slide-Over) -->
+    <div id="mobile-drawer-backdrop" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div id="mobile-drawer-panel" class="fixed inset-y-0 left-0 w-full max-w-xs sm:max-w-sm bg-white shadow-2xl flex flex-col h-full transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+            
+            <!-- Drawer Header -->
+            <div class="p-4 border-b border-slate-200/90 flex items-center justify-between bg-slate-50">
+                <a href="{{ route('home') }}" class="flex items-center">
+                    <img src="{{ \App\Models\Setting::get('logo_url') ?: asset('images/logo.png') }}" 
+                         alt="{{ \App\Models\Setting::get('site_name', 'AQ NEWSWIRE') }}" 
+                         class="h-8 w-auto max-w-[150px] object-contain">
+                </a>
+                <button type="button" id="mobile-drawer-close" aria-label="Close Navigation" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Drawer Search -->
+            <div class="p-4 border-b border-slate-100">
+                <form action="{{ route('search.index') }}" method="GET" class="relative">
+                    <input type="text" name="q" placeholder="Search news, topics, companies..." 
+                           class="w-full pl-9 pr-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#635BFF] focus:bg-white transition">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </form>
+            </div>
+
+            <!-- Drawer Scrollable Links -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-semibold text-slate-700">
+                <!-- Category Grid -->
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="{{ route('categories.show', 'business') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200/80 hover:border-indigo-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Business</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Global Commerce</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'markets') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200/80 hover:border-emerald-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Markets</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Capital & Stocks</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'investing') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 border border-slate-200/80 hover:border-amber-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Investing</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Wealth Strategy</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'tech') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-200/80 hover:border-blue-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Tech & AI</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Innovation</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'politics') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-rose-50 border border-slate-200/80 hover:border-rose-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Politics</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Geopolitics</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'lifestyle') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-pink-50 border border-slate-200/80 hover:border-pink-200 transition block">
+                        <div class="font-bold text-[#0A2540]">LifeStyle</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Executive Life</div>
+                    </a>
+                    <a href="{{ route('categories.show', 'health') }}" class="p-2.5 rounded-xl bg-slate-50 hover:bg-teal-50 border border-slate-200/80 hover:border-teal-200 transition block">
+                        <div class="font-bold text-[#0A2540]">Health</div>
+                        <div class="text-[10px] text-slate-500 mt-0.5">Biotech & Medicine</div>
+                    </a>
+                    <a href="{{ route('rankings.index') }}" class="p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 transition block">
+                        <div class="font-bold text-[#635BFF]">★ Rankings</div>
+                        <div class="text-[10px] text-indigo-500 mt-0.5">Billionaires & Lists</div>
+                    </a>
+                </div>
+
+                <!-- Media Feeds -->
+                <div class="pt-2 border-t border-slate-100 space-y-1">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 block px-2 mb-1">Media & Intelligence</span>
+                    <a href="{{ route('videos.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#0A2540]">
+                        <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <span>AQ NEWSWIRE Video</span>
+                    </a>
+                    <a href="{{ route('podcasts.index') }}" class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-[#0A2540]">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
+                        <span>Executive Podcasts</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Drawer Footer -->
+            <div class="p-4 border-t border-slate-200/90 bg-slate-50 space-y-3">
+                @auth
+                    <a href="{{ route('account.dashboard') }}" class="w-full block py-2.5 text-center bg-[#0A2540] text-white rounded-xl text-xs font-bold uppercase tracking-wider">
+                        My Account ({{ explode(' ', Auth::user()->name)[0] }})
+                    </a>
+                @else
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="{{ route('login') }}" class="w-full py-2.5 text-center bg-white border border-slate-200 hover:bg-slate-100 text-[#0A2540] rounded-xl text-xs font-bold">
+                            Sign In
+                        </a>
+                        <a href="#newsletter-cta" class="w-full py-2.5 text-center bg-[#635BFF] hover:bg-[#5851EA] text-white rounded-xl text-xs font-bold">
+                            Subscribe
+                        </a>
+                    </div>
+                @endauth
+            </div>
+
+        </div>
+    </div>
 
     <!-- 3. Global Command Palette / Search Modal (Live Autocomplete, Ctrl + K - Stripe Style) -->
     <div id="search-modal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-start justify-center pt-16 sm:pt-20 px-4">
@@ -1066,8 +1147,9 @@
                         closeModal();
                     }
                 }
-                if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
-                    closeModal();
+                if (e.key === 'Escape') {
+                    if (modal && !modal.classList.contains('hidden')) closeModal();
+                    if (drawerBackdrop && !drawerBackdrop.classList.contains('hidden')) closeDrawer();
                 }
             });
 
@@ -1077,9 +1159,36 @@
                 });
             }
 
-            if (mobileToggle && mobileNav) {
-                mobileToggle.addEventListener('click', function () {
-                    mobileNav.classList.toggle('hidden');
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+            const drawerPanel = document.getElementById('mobile-drawer-panel');
+            const drawerClose = document.getElementById('mobile-drawer-close');
+
+            function openDrawer() {
+                if (drawerBackdrop && drawerPanel) {
+                    drawerBackdrop.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                    setTimeout(() => {
+                        drawerPanel.classList.remove('-translate-x-full');
+                    }, 10);
+                }
+            }
+
+            function closeDrawer() {
+                if (drawerBackdrop && drawerPanel) {
+                    drawerPanel.classList.add('-translate-x-full');
+                    setTimeout(() => {
+                        drawerBackdrop.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }, 300);
+                }
+            }
+
+            if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
+            if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+            if (drawerBackdrop) {
+                drawerBackdrop.addEventListener('click', function (e) {
+                    if (e.target === drawerBackdrop) closeDrawer();
                 });
             }
 
