@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             users: '/account'
         );
         $middleware->trustProxies(at: '*');
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(HandleSeoRedirects::class);
         $middleware->alias([
             'admin.role' => \App\Http\Middleware\EnsureAdminRole::class,

@@ -9,6 +9,10 @@
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta name="robots" content="@yield('robots', 'index, follow, max-image-preview:large')">
 
+    <!-- Hreflang Tags for Multi-Region / Search Engines -->
+    <link rel="alternate" hreflang="en" href="@yield('canonical', url()->current())">
+    <link rel="alternate" hreflang="x-default" href="@yield('canonical', url()->current())">
+
     <!-- Google Search Console Ownership Verification -->
     @if($gsc = \App\Models\Setting::get('google_search_console_code'))
         @if(str_contains($gsc, '<meta'))
@@ -23,25 +27,86 @@
         {!! $customHead !!}
     @endif
 
+    @php
+        $siteBrand = \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE');
+        $siteNameFull = \App\Models\Setting::get('site_name', 'AQ NEWSWIRE — Global Business, Markets, Technology & Leadership');
+        $siteDesc = \App\Models\Setting::get('site_description', 'Definitive international journalism covering business leadership, disruptive technology, financial markets, and global wealth rankings.');
+        $defaultOgImage = asset('images/aqnewswire-og.png');
+        $pageCanonical = View::getSection('canonical', url()->current());
+        $pageTitle = View::getSection('title', $siteNameFull);
+        $pageDesc = View::getSection('meta_description', $siteDesc);
+        $baseUrl = url('/');
+        $logoFull = asset(\App\Models\Setting::get('logo_url', '/images/logo.png'));
+        
+        $globalSiteSchema = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'NewsMediaOrganization',
+                    '@id' => $baseUrl . '/#organization',
+                    'name' => $siteBrand,
+                    'alternateName' => $siteNameFull,
+                    'url' => $baseUrl,
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        '@id' => $baseUrl . '/#logo',
+                        'url' => $logoFull,
+                        'caption' => $siteBrand,
+                    ],
+                    'sameAs' => array_values(array_filter([
+                        \App\Models\Setting::get('social_linkedin', 'https://linkedin.com/company/aq-newswire'),
+                        \App\Models\Setting::get('social_twitter', 'https://x.com/aqnewswire'),
+                        \App\Models\Setting::get('social_facebook', 'https://facebook.com/aqnewswire'),
+                        \App\Models\Setting::get('social_instagram', 'https://instagram.com/aqnewswire'),
+                        \App\Models\Setting::get('social_youtube', 'https://youtube.com/@aqnewswire'),
+                    ])),
+                ],
+                [
+                    '@type' => 'WebSite',
+                    '@id' => $baseUrl . '/#website',
+                    'url' => $baseUrl,
+                    'name' => $siteBrand,
+                    'description' => $siteDesc,
+                    'publisher' => [
+                        '@id' => $baseUrl . '/#organization',
+                    ],
+                    'potentialAction' => [
+                        '@type' => 'SearchAction',
+                        'target' => [
+                            '@type' => 'EntryPoint',
+                            'urlTemplate' => $baseUrl . '/search?q={search_term_string}',
+                        ],
+                        'query-input' => 'required name=search_term_string',
+                    ],
+                    'inLanguage' => 'en-US',
+                ]
+            ]
+        ];
+    @endphp
+
+    <!-- Global Schema.org JSON-LD: NewsMediaOrganization & WebSite SearchAction -->
+    <script type="application/ld+json">
+    {!! json_encode($globalSiteSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
+
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:site_name" content="{{ \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE') }}">
-    <meta property="og:title" content="@yield('og_title', View::getSection('title', 'AQ NEWSWIRE — Global Business, Finance, Innovation & Leadership'))">
-    <meta property="og:description" content="@yield('og_description', View::getSection('meta_description', 'Definitive international journalism covering business leadership, disruptive technology, financial markets, and global wealth rankings.'))">
-    <meta property="og:url" content="@yield('og_url', url()->current())">
-    @hasSection('og_image')
-    <meta property="og:image" content="@yield('og_image')">
-    @endif
+    <meta property="og:site_name" content="{{ $siteBrand }}">
+    <meta property="og:title" content="@yield('og_title', $pageTitle)">
+    <meta property="og:description" content="@yield('og_description', $pageDesc)">
+    <meta property="og:url" content="@yield('og_url', $pageCanonical)">
+    <meta property="og:image" content="@yield('og_image', $defaultOgImage)">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $siteBrand }}">
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="@yield('twitter_card', 'summary_large_image')">
-    <meta name="twitter:title" content="@yield('twitter_title', View::getSection('og_title', View::getSection('title', 'AQ NEWSWIRE')))">
-    <meta name="twitter:description" content="@yield('twitter_description', View::getSection('og_description', View::getSection('meta_description', 'Definitive international journalism.')))">
-    @hasSection('twitter_image')
-    <meta name="twitter:image" content="@yield('twitter_image')">
-    @elseif(View::hasSection('og_image'))
-    <meta name="twitter:image" content="@yield('og_image')">
-    @endif
+    <meta name="twitter:site" content="@aqnewswire">
+    <meta name="twitter:creator" content="@aqnewswire">
+    <meta name="twitter:title" content="@yield('twitter_title', View::getSection('og_title', $pageTitle))">
+    <meta name="twitter:description" content="@yield('twitter_description', View::getSection('og_description', $pageDesc))">
+    <meta name="twitter:image" content="@yield('twitter_image', View::getSection('og_image', $defaultOgImage))">
 
     <!-- Favicon & Brand Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="{{ \App\Models\Setting::get('favicon_url') ?: asset('images/favicon.png') }}">
