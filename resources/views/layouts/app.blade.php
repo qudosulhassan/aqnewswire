@@ -128,7 +128,6 @@
             --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         html {
-            overflow-x: hidden;
             scroll-behavior: smooth;
         }
         body {
@@ -136,7 +135,19 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            overflow-x: hidden;
+        }
+        /* Prevent horizontal overflow while ensuring position: sticky functions properly across all viewports */
+        html, body {
+            overflow-x: clip;
+        }
+        #main-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 45;
+            background-color: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         .font-serif {
             font-family: 'Newsreader', 'Charter', Georgia, Cambria, serif !important;
@@ -226,16 +237,19 @@
         <div class="max-w-[1600px] mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14 sm:h-16 lg:h-20">
                 
-                <!-- Left: Hamburger (mobile) + AQ NEWSWIRE Logo -->
-                <div class="flex items-center gap-1.5 sm:gap-4 shrink-0">
-                    <!-- Mobile Menu Hamburger Button (44px touch target) -->
+                <!-- Left: Category / Sections Drawer Toggle + AQ NEWSWIRE Logo -->
+                <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                    <!-- Left Corner Category Open Button (Active on Mobile, Tablet & Desktop) -->
                     <button type="button" 
                             id="mobile-menu-toggle" 
-                            aria-label="Open Navigation Menu" 
-                            class="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 hover:text-[#0A2540] hover:bg-slate-100 transition cursor-pointer -ml-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            onclick="window.openDrawer && window.openDrawer()"
+                            aria-label="Open Categories & Sections Navigation" 
+                            class="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-slate-700 hover:text-[#0A2540] hover:bg-slate-100 transition cursor-pointer -ml-1 border border-transparent hover:border-slate-200"
+                            title="Browse All Categories & Sections">
+                        <svg class="w-6 h-6 text-slate-800" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
                         </svg>
+                        <span class="hidden sm:inline text-xs font-bold text-slate-800 uppercase tracking-wide">Sections</span>
                     </button>
 
                     <a href="{{ route('home') }}" class="flex items-center group py-1" title="{{ \App\Models\Setting::get('site_name', 'AQ NEWSWIRE') }}">
@@ -738,9 +752,9 @@
         </nav>
     </header>
 
-    <!-- Mobile Off-Canvas Navigation Drawer (Full Backdrop & Smooth Slide-Over) -->
-    <div id="mobile-drawer-backdrop" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity duration-300">
-        <div id="mobile-drawer-panel" class="fixed inset-y-0 left-0 w-full max-w-xs sm:max-w-sm bg-white shadow-2xl flex flex-col h-full transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+    <!-- Off-Canvas Navigation Drawer (Full Backdrop & Smooth Slide-Over) -->
+    <div id="mobile-drawer-backdrop" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden transition-opacity duration-300" onclick="window.closeDrawer && window.closeDrawer()">
+        <div id="mobile-drawer-panel" class="fixed inset-y-0 left-0 w-full max-w-xs sm:max-w-sm bg-white shadow-2xl flex flex-col h-full transform -translate-x-full transition-transform duration-300 ease-in-out z-50" onclick="event.stopPropagation()">
             
             <!-- Drawer Header -->
             <div class="p-4 border-b border-slate-200/90 flex items-center justify-between bg-slate-50">
@@ -749,7 +763,11 @@
                          alt="{{ \App\Models\Setting::get('site_name', 'AQ NEWSWIRE') }}" 
                          class="h-8 w-auto max-w-[150px] object-contain">
                 </a>
-                <button type="button" id="mobile-drawer-close" aria-label="Close Navigation" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer">
+                <button type="button" 
+                        id="mobile-drawer-close" 
+                        onclick="window.closeDrawer && window.closeDrawer()" 
+                        aria-label="Close Navigation" 
+                        class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-200 transition cursor-pointer">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
@@ -1110,6 +1128,31 @@
             }
         };
 
+        // Global Navigation Drawer Handlers
+        window.openDrawer = function () {
+            const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+            const drawerPanel = document.getElementById('mobile-drawer-panel');
+            if (drawerBackdrop && drawerPanel) {
+                drawerBackdrop.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => {
+                    drawerPanel.classList.remove('-translate-x-full');
+                }, 10);
+            }
+        };
+
+        window.closeDrawer = function () {
+            const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+            const drawerPanel = document.getElementById('mobile-drawer-panel');
+            if (drawerBackdrop && drawerPanel) {
+                drawerPanel.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    drawerBackdrop.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('search-modal');
             const trigger = document.getElementById('search-modal-trigger');
@@ -1117,7 +1160,8 @@
             const searchInput = document.getElementById('global-search-input');
             const autocompleteContainer = document.getElementById('search-autocomplete-results');
             const mobileToggle = document.getElementById('mobile-menu-toggle');
-            const mobileNav = document.getElementById('mobile-nav');
+            const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
+            const drawerClose = document.getElementById('mobile-drawer-close');
 
             function openModal() {
                 if (modal) {
@@ -1149,7 +1193,7 @@
                 }
                 if (e.key === 'Escape') {
                     if (modal && !modal.classList.contains('hidden')) closeModal();
-                    if (drawerBackdrop && !drawerBackdrop.classList.contains('hidden')) closeDrawer();
+                    if (drawerBackdrop && !drawerBackdrop.classList.contains('hidden')) window.closeDrawer();
                 }
             });
 
@@ -1159,36 +1203,23 @@
                 });
             }
 
-            const mobileToggle = document.getElementById('mobile-menu-toggle');
-            const drawerBackdrop = document.getElementById('mobile-drawer-backdrop');
-            const drawerPanel = document.getElementById('mobile-drawer-panel');
-            const drawerClose = document.getElementById('mobile-drawer-close');
-
-            function openDrawer() {
-                if (drawerBackdrop && drawerPanel) {
-                    drawerBackdrop.classList.remove('hidden');
-                    document.body.style.overflow = 'hidden';
-                    setTimeout(() => {
-                        drawerPanel.classList.remove('-translate-x-full');
-                    }, 10);
-                }
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    window.openDrawer();
+                });
             }
 
-            function closeDrawer() {
-                if (drawerBackdrop && drawerPanel) {
-                    drawerPanel.classList.add('-translate-x-full');
-                    setTimeout(() => {
-                        drawerBackdrop.classList.add('hidden');
-                        document.body.style.overflow = '';
-                    }, 300);
-                }
+            if (drawerClose) {
+                drawerClose.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    window.closeDrawer();
+                });
             }
 
-            if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
-            if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
             if (drawerBackdrop) {
                 drawerBackdrop.addEventListener('click', function (e) {
-                    if (e.target === drawerBackdrop) closeDrawer();
+                    if (e.target === drawerBackdrop) window.closeDrawer();
                 });
             }
 
