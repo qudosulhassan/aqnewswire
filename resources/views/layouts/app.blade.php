@@ -116,25 +116,33 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&display=swap" rel="stylesheet">
 
     <!-- Tailwind / Vite Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         :root {
-            --font-serif: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
-            --font-headline: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+            --font-serif: 'Newsreader', 'Charter', Georgia, Cambria, 'Times New Roman', Times, serif;
+            --font-headline: 'Newsreader', 'Playfair Display', Georgia, Cambria, serif;
             --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+        html {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
         body {
-            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+            font-family: 'Newsreader', 'Charter', Georgia, Cambria, 'Times New Roman', Times, serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            overflow-x: hidden;
         }
         .font-serif {
-            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif !important;
+            font-family: 'Newsreader', 'Charter', Georgia, Cambria, serif !important;
         }
         .font-headline {
-            font-family: Georgia, 'Newsreader', Cambria, 'Times New Roman', Times, serif;
+            font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
         }
         .font-brand {
             font-family: 'Cinzel', serif;
@@ -677,8 +685,8 @@
                         </a>
                     @endauth
 
-                    <!-- Mobile Menu Hamburger Button -->
-                    <button type="button" id="mobile-menu-toggle" class="lg:hidden p-2 text-slate-600 hover:text-[#0A2540]">
+                    <!-- Mobile Menu Hamburger Button (Google Mobile Friendly Touch Target >= 44px) -->
+                    <button type="button" id="mobile-menu-toggle" aria-label="Open Navigation Menu" class="lg:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 hover:text-[#0A2540] hover:bg-slate-100 transition cursor-pointer">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
                         </svg>
