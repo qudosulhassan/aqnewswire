@@ -5,36 +5,39 @@
 @section('canonical', route('categories.show', $category->slug))
 
 @push('head')
+@php
+$categorySchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'CollectionPage',
+    'name' => $category->name . ' — ' . \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE'),
+    'description' => $category->display_description,
+    'url' => route('categories.show', $category->slug),
+    'isPartOf' => [
+        '@type' => 'WebSite',
+        'name' => \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE'),
+        'url' => url('/'),
+    ],
+    'breadcrumb' => [
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            [
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'Home',
+                'item' => url('/'),
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => $category->name,
+                'item' => route('categories.show', $category->slug),
+            ],
+        ],
+    ],
+];
+@endphp
 <script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "{{ $category->name }} — AQ NEWSWIRE",
-    "description": "{{ $category->display_description }}",
-    "url": "{{ route('categories.show', $category->slug) }}",
-    "isPartOf": {
-        "@type": "WebSite",
-        "name": "AQ NEWSWIRE",
-        "url": "{{ url('/') }}"
-    },
-    "breadcrumb": {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "{{ url('/') }}"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "{{ $category->name }}",
-                "item": "{{ route('categories.show', $category->slug) }}"
-            }
-        ]
-    }
-}
+{!! json_encode($categorySchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 

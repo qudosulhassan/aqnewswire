@@ -3,16 +3,19 @@
 @section('title', $video->title . ' — AQ NEWSWIRE Video')
 
 @push('head')
+@php
+$videoSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'VideoObject',
+    'name' => $video->title,
+    'description' => $video->description ?? $video->title,
+    'thumbnailUrl' => array_values(array_filter([$video->thumbnail_url])),
+    'uploadDate' => $video->published_at ? $video->published_at->toIso8601String() : now()->toIso8601String(),
+    'embedUrl' => $video->video_url,
+];
+@endphp
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "VideoObject",
-  "name": "{{ addslashes($video->title) }}",
-  "description": "{{ addslashes($video->description ?? $video->title) }}",
-  "thumbnailUrl": ["{{ $video->thumbnail_url }}"],
-  "uploadDate": "{{ $video->published_at ? $video->published_at->toIso8601String() : now()->toIso8601String() }}",
-  "embedUrl": "{{ $video->video_url }}"
-}
+{!! json_encode($videoSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 

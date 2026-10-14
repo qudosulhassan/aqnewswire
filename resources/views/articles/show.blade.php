@@ -16,63 +16,72 @@
 
 @push('head')
 <!-- Schema.org JSON-LD Structured Data: NewsArticle & BreadcrumbList -->
+@php
+$articleSchema = [
+    '@context' => 'https://schema.org',
+    '@graph' => [
+        [
+            '@type' => 'NewsArticle',
+            '@id' => $article->effective_canonical_url . '#article',
+            'isPartOf' => [
+                '@type' => 'WebPage',
+                '@id' => $article->effective_canonical_url,
+            ],
+            'headline' => $article->title,
+            'description' => $article->effective_meta_description,
+            'image' => array_values(array_filter([$article->effective_og_image])),
+            'datePublished' => $article->published_at ? $article->published_at->toIso8601String() : $article->created_at->toIso8601String(),
+            'dateModified' => $article->updated_at->toIso8601String(),
+            'mainEntityOfPage' => [
+                '@type' => 'WebPage',
+                '@id' => $article->effective_canonical_url,
+            ],
+            'author' => [
+                [
+                    '@type' => 'Person',
+                    'name' => $article->author->name,
+                    'jobTitle' => $article->author->title ?? 'Staff Journalist',
+                    'url' => route('authors.show', $article->author->slug),
+                ],
+            ],
+            'publisher' => [
+                '@type' => 'NewsMediaOrganization',
+                'name' => \App\Models\Setting::get('short_brand_name', 'AQ NEWSWIRE'),
+                'url' => url('/'),
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => asset(\App\Models\Setting::get('logo_url', '/images/logo.png')),
+                ],
+            ],
+        ],
+        [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                [
+                    '@type' => 'ListItem',
+                    'position' => 1,
+                    'name' => 'Home',
+                    'item' => url('/'),
+                ],
+                [
+                    '@type' => 'ListItem',
+                    'position' => 2,
+                    'name' => $article->category->name,
+                    'item' => route('categories.show', $article->category->slug),
+                ],
+                [
+                    '@type' => 'ListItem',
+                    'position' => 3,
+                    'name' => $article->title,
+                    'item' => $article->effective_canonical_url,
+                ],
+            ],
+        ],
+    ],
+];
+@endphp
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@graph": [
-    {
-      "@@type": "NewsArticle",
-      "@@id": "{{ $article->effective_canonical_url }}#article",
-      "isPartOf": {
-        "@@type": "WebPage",
-        "@@id": "{{ $article->effective_canonical_url }}"
-      },
-      "headline": {{ json_encode($article->title) }},
-      "description": {{ json_encode($article->effective_meta_description) }},
-      "image": [{{ json_encode($article->effective_og_image) }}],
-      "datePublished": "{{ $article->published_at ? $article->published_at->toIso8601String() : $article->created_at->toIso8601String() }}",
-      "dateModified": "{{ $article->updated_at->toIso8601String() }}",
-      "mainEntityOfPage": {
-        "@@type": "WebPage",
-        "@@id": "{{ $article->effective_canonical_url }}"
-      },
-      "author": [{
-        "@@type": "Person",
-        "name": {{ json_encode($article->author->name) }},
-        "jobTitle": {{ json_encode($article->author->title ?? 'Staff Journalist') }},
-        "url": "{{ route('authors.show', $article->author->slug) }}"
-      }],
-      "publisher": {
-        "@@type": "NewsMediaOrganization",
-        "name": "AQ NEWSWIRE",
-        "url": "{{ url('/') }}"
-      }
-    },
-    {
-      "@@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "{{ url('/') }}"
-        },
-        {
-          "@@type": "ListItem",
-          "position": 2,
-          "name": {{ json_encode($article->category->name) }},
-          "item": "{{ route('categories.show', $article->category->slug) }}"
-        },
-        {
-          "@@type": "ListItem",
-          "position": 3,
-          "name": {{ json_encode($article->title) }},
-          "item": "{{ $article->effective_canonical_url }}"
-        }
-      ]
-    }
-  ]
-}
+{!! json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 

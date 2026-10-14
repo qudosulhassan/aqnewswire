@@ -3,19 +3,22 @@
 @section('title', $episode->title . ' — ' . $podcast->title . ' | AQ NEWSWIRE Podcasts')
 
 @push('head')
+@php
+$episodeSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'PodcastEpisode',
+    'name' => $episode->title,
+    'description' => $episode->description ?? $episode->title,
+    'episodeNumber' => (int) ($episode->episode_number ?? 1),
+    'datePublished' => $episode->published_at ? $episode->published_at->toIso8601String() : now()->toIso8601String(),
+    'partOfSeries' => [
+        '@type' => 'PodcastSeries',
+        'name' => $podcast->title,
+    ],
+];
+@endphp
 <script type="application/ld+json">
-{
-  "@@context": "https://schema.org",
-  "@@type": "PodcastEpisode",
-  "name": "{{ addslashes($episode->title) }}",
-  "description": "{{ addslashes($episode->description ?? $episode->title) }}",
-  "episodeNumber": {{ $episode->episode_number ?? 1 }},
-  "datePublished": "{{ $episode->published_at ? $episode->published_at->toIso8601String() : now()->toIso8601String() }}",
-  "partOfSeries": {
-    "@@type": "PodcastSeries",
-    "name": "{{ addslashes($podcast->title) }}"
-  }
-}
+{!! json_encode($episodeSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
 </script>
 @endpush
 
