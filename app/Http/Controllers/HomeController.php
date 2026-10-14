@@ -59,15 +59,22 @@ class HomeController extends Controller
             ->latest('published_at')
             ->take(4)
             ->get();
+        if ($editorsPicks->count() < 4) {
+            $editorsPicks = Article::published()
+                ->with(['author', 'category'])
+                ->orderByDesc('view_count')
+                ->take(4)
+                ->get();
+        }
 
-        // 6. Latest Insights Rail (4-5 stories)
+        // 6. Latest Insights Rail (8 stories)
         $latestInsights = Article::published()
             ->with(['author', 'category'])
             ->latest('published_at')
-            ->take(4)
+            ->take(8)
             ->get();
 
-        // 7. What's Moving the World (Feature + 3 side stories)
+        // 7. What's Moving the World (Feature + 4 side stories)
         $whatsMovingFeature = Article::published()
             ->where('id', '!=', $heroStory?->id)
             ->with(['author', 'category'])
@@ -78,14 +85,15 @@ class HomeController extends Controller
             ->whereNotIn('id', array_filter([$heroStory?->id, $whatsMovingFeature?->id]))
             ->with(['author', 'category'])
             ->latest('published_at')
-            ->take(3)
+            ->take(4)
             ->get();
 
-        // If side stories are fewer than 3, backfill from published
-        if ($whatsMovingSide->count() < 3) {
+        // If side stories are fewer than 4, backfill from published
+        if ($whatsMovingSide->count() < 4) {
             $whatsMovingSide = Article::published()
+                ->where('id', '!=', $whatsMovingFeature?->id)
                 ->with(['author', 'category'])
-                ->take(3)
+                ->take(4)
                 ->get();
         }
 
@@ -108,24 +116,60 @@ class HomeController extends Controller
             ['value' => '72%', 'label' => 'CEOs Prioritize AI in Strategy', 'trend' => '+18%', 'is_positive' => true],
         ];
 
-        // 10. Category Ecosystem Collections
-        $allPublished = Article::published()->with(['author', 'category'])->get();
-        
-        $aiStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, ['ai', 'enterprise', 'tech', 'ai-innovation', 'technology']))->take(3);
-        if ($aiStories->isEmpty()) { $aiStories = $allPublished->take(3); }
+        // 10. Comprehensive Category Ecosystem Collections
+        $allPublished = Article::published()->with(['author', 'category'])->latest('published_at')->get();
 
-        $leadershipStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, ['workplace', 'business', 'leadership']))->take(3);
-        if ($leadershipStories->isEmpty()) { $leadershipStories = $allPublished->skip(1)->take(3); }
+        // A. Tech & AI
+        $techStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, [
+            'ai', 'enterprise', 'tech', 'mobile', 'cybersecurity', 'internet', 'social-media', 'tech-guide'
+        ]))->take(5);
+        if ($techStories->count() < 4) {
+            $techStories = $allPublished->take(5);
+        }
 
-        $financeStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, ['markets', 'bonds', 'finance', 'investing']))->take(3);
-        if ($financeStories->isEmpty()) { $financeStories = $allPublished->skip(2)->take(3); }
+        // B. Markets, Finance & Investing
+        $marketsStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, [
+            'markets', 'finance', 'economy', 'wealth', 'investing', 'bonds', 'fintech', 'earnings', 'etf-street', 'trader-talk', 'us-markets', 'europe-markets', 'asia-markets'
+        ]))->take(5);
+        if ($marketsStories->count() < 4) {
+            $marketsStories = $allPublished->skip(2)->take(5);
+        }
+
+        // C. Politics & Geopolitics
+        $politicsStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, [
+            'politics', 'white-house', 'defense', 'congress', 'world-politics', 'europe-politics', 'china-politics', 'asia-politics', 'expanding-opportunity'
+        ]))->take(5);
+        if ($politicsStories->count() < 4) {
+            $politicsStories = $allPublished->skip(4)->take(5);
+        }
+
+        // D. Leadership, Workplace & Lifestyle
+        $lifestyleStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, [
+            'lifestyle', 'workplace', 'careers', 'cars', 'travel', 'food-cooking', 'fitness', 'relationships', 'life', 'small-business', 'retail', 'media'
+        ]))->take(5);
+        if ($lifestyleStories->count() < 4) {
+            $lifestyleStories = $allPublished->skip(6)->take(5);
+        }
+
+        // E. Health, Longevity & Science
+        $healthStories = $allPublished->filter(fn($a) => in_array($a->category?->slug, [
+            'health', 'mental-health', 'supplements', 'hearing-health', 'medical-devices', 'diet'
+        ]))->take(5);
+        if ($healthStories->count() < 4) {
+            $healthStories = $allPublished->skip(8)->take(5);
+        }
+
+        // F. Deep Dive / Special Investigation Story
+        $investigationStory = $allPublished->firstWhere('category.slug', 'investigations')
+            ?? $allPublished->firstWhere('is_editors_pick', true)
+            ?? $allPublished->first();
 
         // 11. Latest Stream & Categories
         $latestStream = Article::published()
-            ->whereNotIn('id', $excludeIds)
             ->with(['author', 'category'])
             ->latest('published_at')
-            ->paginate(6);
+            ->take(8)
+            ->get();
 
         $categories = Category::navVisible()->get();
 
@@ -150,9 +194,12 @@ class HomeController extends Controller
             'whatsMovingSide',
             'marketIndices',
             'intelligenceMetrics',
-            'aiStories',
-            'leadershipStories',
-            'financeStories',
+            'techStories',
+            'marketsStories',
+            'politicsStories',
+            'lifestyleStories',
+            'healthStories',
+            'investigationStory',
             'latestStream',
             'categories',
             'featuredList',
