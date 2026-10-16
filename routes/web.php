@@ -29,6 +29,7 @@ use App\Http\Controllers\Contributor\ContributorDashboardController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\RankingsController;
@@ -46,7 +47,24 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/rankings', [RankingsController::class, 'index'])->name('rankings.index');
 Route::get('/rankings/{slug}', [RankingsController::class, 'show'])->name('rankings.show');
 Route::get('/author/{slug}', [AuthorController::class, 'show'])->name('authors.show');
-Route::get('/contact', function () { return view('pages.contact'); })->name('contact');
+
+// Company & Transparency Pages
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/team', [PageController::class, 'team'])->name('team');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::post('/contact', [PageController::class, 'submitContact'])->name('contact.submit');
+Route::get('/advertise', [PageController::class, 'advertise'])->name('advertise');
+Route::post('/advertise', [PageController::class, 'submitAdvertise'])->name('advertise.submit');
+
+// Legal & Trust Policies (Google E-E-A-T & Regulatory Compliance)
+Route::get('/privacy-policy', [PageController::class, 'privacy'])->name('privacy');
+Route::get('/privacy', fn() => redirect()->route('privacy', [], 301));
+Route::get('/terms-of-service', [PageController::class, 'terms'])->name('terms');
+Route::get('/terms', fn() => redirect()->route('terms', [], 301));
+Route::get('/cookie-policy', [PageController::class, 'cookies'])->name('cookies');
+Route::get('/cookies', fn() => redirect()->route('cookies', [], 301));
+Route::get('/editorial-standards', [PageController::class, 'editorialStandards'])->name('editorial-standards');
+Route::get('/editorial-guidelines', fn() => redirect()->route('editorial-standards', [], 301));
 Route::get('/search/autocomplete', [SearchController::class, 'autocomplete'])->name('search.autocomplete');
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');

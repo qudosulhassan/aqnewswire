@@ -1007,9 +1007,9 @@
                     <h4 class="text-[#0A2540] font-bold uppercase tracking-wider text-[11px]">Company</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('contact') }}" class="hover:text-[#635BFF] transition">Contact & Bureaus</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">About Us</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Our Team</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Advertise</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-[#635BFF] transition">About Us</a></li>
+                        <li><a href="{{ route('team') }}" class="hover:text-[#635BFF] transition">Our Team</a></li>
+                        <li><a href="{{ route('advertise') }}" class="hover:text-[#635BFF] transition">Advertise</a></li>
                         <li><a href="{{ route('admin.login') }}" class="hover:text-[#635BFF] transition">Staff Editorial CMS</a></li>
                     </ul>
                 </div>
@@ -1018,10 +1018,10 @@
                 <div class="col-span-1 md:col-span-2 space-y-3">
                     <h4 class="text-[#0A2540] font-bold uppercase tracking-wider text-[11px]">Legal</h4>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Cookie Policy</a></li>
-                        <li><a href="#" class="hover:text-[#635BFF] transition">Editorial Standards</a></li>
+                        <li><a href="{{ route('privacy') }}" class="hover:text-[#635BFF] transition">Privacy Policy</a></li>
+                        <li><a href="{{ route('terms') }}" class="hover:text-[#635BFF] transition">Terms of Service</a></li>
+                        <li><a href="{{ route('cookies') }}" class="hover:text-[#635BFF] transition">Cookie Policy</a></li>
+                        <li><a href="{{ route('editorial-standards') }}" class="hover:text-[#635BFF] transition">Editorial Standards</a></li>
                         <li><a href="{{ url('/sitemap.xml') }}" class="hover:text-[#635BFF] transition">Sitemap</a></li>
                     </ul>
                 </div>
