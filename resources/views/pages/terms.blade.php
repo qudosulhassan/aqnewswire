@@ -6,7 +6,7 @@
 @push('head')
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
+  "{{ '@' }}context": "https://schema.org",
   "@type": "WebPage",
   "name": "Terms of Service",
   "url": "{{ route('terms') }}",

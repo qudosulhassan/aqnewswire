@@ -6,7 +6,7 @@
 @push('head')
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
+  "{{ '@' }}context": "https://schema.org",
   "@type": "AboutPage",
   "name": "AQ NEWSWIRE Editorial Team & Correspondents",
   "url": "{{ route('team') }}",

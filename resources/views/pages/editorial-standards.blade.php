@@ -6,7 +6,7 @@
 @push('head')
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
+  "{{ '@' }}context": "https://schema.org",
   "@type": "WebPage",
   "name": "Editorial Standards and Ethics Policy",
   "url": "{{ route('editorial-standards') }}",
